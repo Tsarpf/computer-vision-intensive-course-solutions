@@ -225,3 +225,5 @@ for i in m_hist.flatten():
 
 plt.plot(h2)
 plt.savefig('messi_hist_after.png')
+
+cv2.imwrite('messi_after_hist.jpg', m_hist)

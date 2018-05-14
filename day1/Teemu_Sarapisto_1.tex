@@ -90,6 +90,8 @@ messi high pass
  \subsection{Finally, perform OpenCV’s histogram equalization to the original messi image and show also the histograms before and after equalization}
   \fbox{\includegraphics[height=50mm]{messi_hist_before} \par}
   \fbox{\includegraphics[height=50mm]{messi_hist_after} \par}
+  \fbox{\includegraphics[height=50mm]{m} \par}
+  \fbox{\includegraphics[height=50mm]{messi_after_hist} \par}
 
  \subsection{Report also, how long it took for you to complete the hands-on exercise}
     5 - 6 hours
@@ -324,6 +326,8 @@ for i in m_hist.flatten():
 
 plt.plot(h2)
 plt.savefig('messi_hist_after.png')
+
+cv2.imwrite('messi_after_hist.jpg', m_hist)
 \end{verbatim}
 
 \end{document}
