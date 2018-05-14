@@ -20,31 +20,28 @@ m = cv2.imread('messi-gray.tiff', cv2.IMREAD_GRAYSCALE) / 255
 
 p_ga1 = clip(p + random_gauss(p, 0.05))
 p_ga2 = clip(p + random_gauss(p, 0.15))
-# Tehtävä 5
+### Tehtävä 5
 gaussed_m1 = clip(m + random_gauss(m, 0.05))
 gaussed_m2 = clip(m + random_gauss(m, 0.15))
 
-# Tehtävä 6
+### Tehtävä 6
 def random_saltpepper(A, r):
     B = A + np.random.binomial(1, r/2, A.shape) # pepper
     C = B * np.random.binomial(1, 1 - (r/2), A.shape) # salt
     return C
 
-# Tehtävä 7
-#TODO clip
-pattern_peppered1 = clip(random_saltpepper(p, 0.1)) / 255
-pattern_peppered2 = clip(random_saltpepper(p, 0.5)) / 255
-m_peppered1 = clip(random_saltpepper(m, 0.1)) / 255
-m_peppered2 = clip(random_saltpepper(m, 0.5)) / 255
-#cv2.imshow('joku iqqnan nimi',  random_saltpepper(gaussed_messi1, 0.2))
-#cv2.waitKey()
+### Tehtävä 7
+pattern_peppered1 = clip(random_saltpepper(p, 0.1))
+pattern_peppered2 = clip(random_saltpepper(p, 0.5))
+m_peppered1 = clip(random_saltpepper(m, 0.1))
+m_peppered2 = clip(random_saltpepper(m, 0.5))
 
-# Tehtävä 8
+### Tehtävä 8
 def lowpass(A, n):
     weights = [[1 for x in range(n)] for y in range(n)]
     return nd.filters.convolve(A, weights) / (n*n)
 
-# Tehtävä 9
+### Tehtävä 9
 
 pattern_lp1 = lowpass(p, 3)
 pattern_lp2 = lowpass(p, 5)
@@ -80,28 +77,27 @@ def highpass(A, n):
 
 
 ### Tehtävä 11
-# TODO: clippaus re: tehtävänanto
-pattern_hp1 = highpass(p, 3)
-pattern_hp2 = highpass(p, 5)
-gaussed_pattern1_hp1 = highpass(p_ga1, 3)
-gaussed_pattern1_hp2 = highpass(p_ga1, 5)
-gaussed_pattern2_hp1 = highpass(p_ga2, 3)
-gaussed_pattern2_hp2 = highpass(p_ga2, 5)
-pattern_peppered1_hp1 = highpass(pattern_peppered1, 3) 
-pattern_peppered1_hp2 = highpass(pattern_peppered1, 5) 
-pattern_peppered2_hp1 = highpass(pattern_peppered2, 3) 
-pattern_peppered2_hp2 = highpass(pattern_peppered2, 5) 
+pattern_hp1 = clip(highpass(p, 3) + 0.5)
+pattern_hp2 = clip(highpass(p, 5) + 0.5)
+gaussed_pattern1_hp1 = clip(highpass(p_ga1, 3) + 0.5)
+gaussed_pattern1_hp2 = clip(highpass(p_ga1, 5) + 0.5)
+gaussed_pattern2_hp1 = clip(highpass(p_ga2, 3) + 0.5)
+gaussed_pattern2_hp2 = clip(highpass(p_ga2, 5) + 0.5)
+pattern_peppered1_hp1 = clip(highpass(pattern_peppered1, 3) + 0.5)
+pattern_peppered1_hp2 = clip(highpass(pattern_peppered1, 5) + 0.5)
+pattern_peppered2_hp1 = clip(highpass(pattern_peppered2, 3) + 0.5)
+pattern_peppered2_hp2 = clip(highpass(pattern_peppered2, 5) + 0.5)
 
-m_hp1 = highpass(m, 3)
-m_hp2 = highpass(m, 5)
-gaussed_m1_hp1 = highpass(gaussed_m1, 3)
-gaussed_m1_hp2 = highpass(gaussed_m1, 5)
-gaussed_m2_hp1 = highpass(gaussed_m2, 3)
-gaussed_m2_hp2 = highpass(gaussed_m2, 5)
-m_peppered1_hp1 = highpass(m_peppered1, 3) 
-m_peppered1_hp2 = highpass(m_peppered1, 5) 
-m_peppered2_hp1 = highpass(m_peppered2, 3) 
-m_peppered2_hp2 = highpass(m_peppered2, 5) 
+m_hp1 = clip(highpass(m, 3) + 0.5)
+m_hp2 = clip(highpass(m, 5) + 0.5)
+gaussed_m1_hp1 = clip(highpass(gaussed_m1, 3) + 0.5)
+gaussed_m1_hp2 = clip(highpass(gaussed_m1, 5) + 0.5)
+gaussed_m2_hp1 = clip(highpass(gaussed_m2, 3) + 0.5)
+gaussed_m2_hp2 = clip(highpass(gaussed_m2, 5) + 0.5)
+m_peppered1_hp1 = clip(highpass(m_peppered1, 3) + 0.5)
+m_peppered1_hp2 = clip(highpass(m_peppered1, 5) + 0.5)
+m_peppered2_hp1 = clip(highpass(m_peppered2, 3) + 0.5) 
+m_peppered2_hp2 = clip(highpass(m_peppered2, 5) + 0.5) 
 
 ### Tehtävä 12
 def median(A, n):
@@ -219,68 +215,13 @@ h = [0]*255
 for i in m_uint8.flatten():
     h[i] += 1
     
-#plt.plot(h)
-#plt.savefig('messi_uint8_hist.png')
-#plt.show()
+
+# plt.plot(h)
+# plt.savefig('messi_hist_before.png')
 
 h2 = [0]*256
 for i in m_hist.flatten():
     h2[i] += 1
 
 plt.plot(h2)
-plt.savefig('messi_hist.png')
-#plt.show()
-#### Tehtävä 16
-
-#cv2.imshow('joku iqqnan nimi',  cv2.resize(median(messi, 2), None, fx=2, fy=2, interpolation=cv2.INTER_AREA))
-#cv2.imshow('joku iqqnan nimi',  cv2.resize(messi_hist, None, fx=2, fy=2, interpolation=cv2.INTER_AREA))
-#cv2.imwrite('gaussed_pattern1.jpg', cv2.resize(gaussed_pattern1 * 255, None, fx=20, fy=20, interpolation=cv2.INTER_AREA))
-#cv2.imwrite('gaussed_pattern2.jpg', cv2.resize(gaussed_pattern2 * 255, None, fx=20, fy=20, interpolation=cv2.INTER_AREA))
-#cv2.imwrite('derp.jpg', cv2.resize(gaussed_pattern2 * 255, None, fx=20, fy=20, interpolation=cv2.INTER_AREA))
-
-#cv2.imshow('joku iqqnan nimi',  cv2.resize(gaussed_pattern1, None, fx=20, fy=20, interpolation=cv2.INTER_AREA))
-#cv2.imshow('joku iqqnan nimi',  gaussed_messi1)
-#cv2.imshow('joku iqqnan nimi',  clip(gaussed_messi1 + random_saltpepper(gaussed_messi1, 0.5)))
-#cv2.imshow('joku iqqnan nimi',  cv2.resize(random_saltpepper(gaussed_messi1, 0.1), None, fx=2, fy=2, interpolation=cv2.INTER_AREA))
-#cv2.imshow('joku iqqnan nimi',  clip(gaussed_messi1 + random_saltpepper(gaussed_messi1, 0.1)))
-#cv2.imshow('joku iqqnan nimi',  random_saltpepper(gaussed_messi1, 0.2))
-#cv2.imshow('joku iqqnan nimi',  gaussed_messi2)
-
-#cv2.imshow('joku iqqnan nimi',  clip(gaussed_messi1 + random_saltpepper(gaussed_messi1, 0.1)))
-#cv2.imshow('joku iqqnan nimi',  cv2.resize(lowpass(pattern, 5), None, fx=20, fy=20, interpolation=cv2.INTER_AREA))
-
-
-#print(cv2.__version__)
-
-#flags = [i for i in dir(cv2) if i.startswith('COLOR_')]
-#print(flags)
-
-#img_bgr = cv2.imread('messi5.jpg')
-#print(type(img_bgr), img_bgr.dtype, img_bgr.shape)
-#cv2.imshow('BGR', img_bgr)
-#cv2.waitKey(0)
-#
-#img_g = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-#print(type(img_g), img_bgr.dtype, img_g.shape)
-#cv2.imshow('grey', img_g)
-#cv2.waitKey(0)
-#
-#z = img_bgr
-#for i in range(z.shape[0]):
-#    for j in range(z.shape[1]):
-#        if 1.2*z[i,j,0]>z[i,j,1] or 1.2*z[i,j,2]>z[i,j,1]:
-#            z[i,j] = [img_g[i,j]]*3
-#
-#cv2.imwrite('grass.jpg', z)
-#cv2.imshow('grass', z)
-#cv2.waitKey(0)
-#           
-#h = [0]*256
-#for i in img_g.flatten():
-#    h[i] += 1
-#
-#plt.plot(h)
-#plt.savefig('histogram.png')
-#plt.show()
-#
-#
+plt.savefig('messi_hist_after.png')
