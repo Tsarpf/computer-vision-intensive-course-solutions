@@ -9,38 +9,76 @@
 \maketitle
 
 \newpage
-% first page
-%    pattern                            Lp-1   LP-2
-%    pattern + noise
-%    pattern + more noise
-%    pattern w/ salt & pepper noise 
-%    pattern w/ salt & pepper noise 2
+\section{Original, noisy and filtered images}
+\newcommand{\aaa}[3]{%
+  \fbox{\includegraphics[height=30mm]{#1}} \quad
+  \fbox{\includegraphics[height=30mm]{#2}} \quad
+  \fbox{\includegraphics[height=30mm]{#3}} \par}
 
-%    messi
-%    messi + noise
-%    messi + more noise 
-%    messi w/ salt & pepper noise 
-%    messi w/ salt & pepper noise 2
-%   
-%   joku muu viel
-%    
-%    so 6 * 3 = 18 images
+\newcommand{\bbb}[3]{%
+  \medskip\noindent\aaa{#1}{#1-#2}{#1-#3}}
 
-\section{}
+\setlength{\fboxsep}{0pt}%
 
-% 1
+pattern low pass
 
-a) Why PGM and TIFF image formats are sometimes better than JPEG 
+\bbb{p}{l3}{l5}
+\bbb{p-ga1}{l3}{l5}
+\bbb{p-ga2}{l3}{l5}
+\bbb{p-sp1}{l3}{l5}
+\bbb{p-sp2}{l3}{l5}
 
-b) What patterns and frequencies are contained in pattern image?
+\pagebreak
 
-\section{}
-% 2
+messi low pass
 
-asdf
+\bbb{m}{l3}{l5}
+\bbb{m-ga1}{l3}{l5}
+\bbb{m-ga2}{l3}{l5}
+\bbb{m-sp1}{l3}{l5}
+\bbb{m-sp2}{l3}{l5}
 
-\section{}
-% 3
+\pagebreak
+
+pattern median
+
+\bbb{p}{m3}{m5}
+\bbb{p-ga1}{m3}{m5}
+\bbb{p-ga2}{m3}{m5}
+\bbb{p-sp1}{m3}{m5}
+\bbb{p-sp2}{m3}{m5}
+
+\pagebreak
+
+messi median
+
+\bbb{m}{m3}{m5}
+\bbb{m-ga1}{m3}{m5}
+\bbb{m-ga2}{m3}{m5}
+\bbb{m-sp1}{m3}{m5}
+\bbb{m-sp2}{m3}{m5}
+
+\pagebreak
+
+pattern high pass
+
+\bbb{p}{h3}{h5}
+\bbb{p-ga1}{h3}{h5}
+\bbb{p-ga2}{h3}{h5}
+\bbb{p-sp1}{h3}{h5}
+\bbb{p-sp2}{h3}{h5}
+
+\pagebreak
+
+messi high pass
+
+\bbb{m}{h3}{h5}
+\bbb{m-ga1}{h3}{h5}
+\bbb{m-ga2}{h3}{h5}
+\bbb{m-sp1}{h3}{h5}
+\bbb{m-sp2}{h3}{h5}
+
+\pagebreak
 
 
 \end{document}
