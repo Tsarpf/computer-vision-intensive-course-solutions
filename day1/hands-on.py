@@ -17,6 +17,7 @@ def clip(i):
 
 p = cv2.imread('pattern.pbm', cv2.IMREAD_GRAYSCALE) / 255
 m = cv2.imread('messi-gray.tiff', cv2.IMREAD_GRAYSCALE) / 255
+print(p)
 
 p_ga1 = clip(p + random_gauss(p, 0.05))
 p_ga2 = clip(p + random_gauss(p, 0.15))
@@ -68,7 +69,7 @@ m_peppered2_lp2 = lowpass(m_peppered2, 5)
 
 # Tehtävä 10
 def highpass(A, n):
-    w = 25
+    w = n*n -1
     weights = [[(-1) for x in range(n)] for y in range(n)]
     x = int(n/2)
     y = int(n/2)
