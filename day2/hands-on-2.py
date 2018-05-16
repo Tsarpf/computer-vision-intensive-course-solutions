@@ -130,5 +130,3 @@ cv2.imwrite('laplace2_zcross.png', color_zero(laplace2_cross, clip(laplace2 * 40
 cv2.imwrite('laplace3_zcross.png', color_zero(laplace3_cross, clip(laplace3 * 40 + 0.5) * 255))
 cv2.imwrite('laplace4_zcross.png', color_zero(laplace4_cross, clip(laplace4 * 40 + 0.5) * 255))
 #cv2.waitKey()
-
-#Report again how long it take to complete these assignments
