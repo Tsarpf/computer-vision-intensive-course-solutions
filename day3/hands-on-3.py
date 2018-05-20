@@ -36,22 +36,7 @@ distanced_uint8 = np.array(distanced * 255, dtype=np.uint8)
 thinned = cv2.ximgproc.thinning(bear_uint8, thinningType=1)
 
 
-#kernel =    [[1, 1, 1],
-#             [1, -8, 1],
-#             [1, 1, 1]]
-#cv2.filter2D(thinned, cv2.CV= kernel)
-#cv2.imwrite('thinned_bear.jpg', thinned)
-
-#cv2.imshow('derp', thinned)
-#cv2.waitKey()
-
-
 # Implement an algorithm that examines the pixels of the skeleton and creates a graph in which the skeleton’s terminal and branch pixels are nodes and and all other skeleton pixels are replaced with arcs
-
-#def count_adjacent_pixels(pixel):
-
-
-
 def mark_terminal(graph, y, x):
     cv2.circle(graph, (x,y), 5, (0, 0, 255))
 
@@ -89,50 +74,50 @@ empty_mask = np.array([[1,  1, 1],
 
 def mask_dir(dir):
     new = np.copy(empty_mask)
-    new[-dir[0], -dir[1]] = 0
+    dir0 = -dir[0] + 1
+    dir1 = -dir[1] + 1
+    new[dir0, dir1] = 0
     return new
 
+def contains(list, tuple):
+    for val in list:
+        if val[0] == tuple[0] and val[1] == tuple[1]:
+            return True
+    return False
+
 def follow_line(endpoints, mask, cur, points):
-    #if cur in endpoints or points[cur[0], cur[1]] == 0:
-    #print('cur', cur)
-    #print('points', points[cur[0], cur[1]])
-    if cur in endpoints:
-        return [cur]
     ends = []
     if points[cur[0], cur[1]] == 0:
         return ends 
+    if contains(endpoints, cur):
+        return [cur]
     points[cur[0], cur[1]] = 0
     for y, row in enumerate(mask):
         for x, cell in enumerate(row):
             if cell == 1:
-                ends.extend(follow_line(endpoints, mask_dir((y, x)), (cur[0] + y, cur[1] + x), points))
+                idx = x - 1
+                idy = y - 1
+                ends.extend(follow_line(endpoints, mask_dir((idy, idx)), (cur[0] + idy, cur[1] + idx), points))
     return ends
 
 
 graph = np.zeros((thinned.shape[0], thinned.shape[1], 3), np.uint8)
-terminals, branches = find_terminals_and_branches(thinned, graph)
-
-print(terminals[0])
 color_thinned = cv2.cvtColor(thinned, cv2.COLOR_GRAY2RGB)
+terminals, branches = find_terminals_and_branches(thinned, color_thinned)
+
 search_img = np.copy(thinned)
 nodes = np.concatenate((terminals, branches))
-print('nodes', nodes)
 for node in nodes:
     results = []
-    search_img = np.copy(thinned)
+    #results.extend(follow_line(nodes, empty_mask, node, search_img))
     for y, row in enumerate(empty_mask):
         for x, cell in enumerate(row):
             if cell == 1:
-                #print('nodey', node[0] + y)
-                #print('nodex', node[1] + x)
-                results.extend(follow_line(terminals, mask_dir((y, x)), (node[0] + y, node[1] + x), search_img))
-    print('results', results)
+                idx = x - 1
+                idy = y - 1
+                results.extend(follow_line(nodes, mask_dir((idy, idx)), (node[0] + idy, node[1] + idx), search_img))
     for result in results:
-        print('result', terminals[0], result)
-        cv2.line(color_thinned, (node[1], node[0]), (result[1], result[0]), (0,0,255), 1)
-
-
-
-#cv2.line(color_thinned, (69, 286), (169,186), (0,0,255), 1)
+        cv2.line(color_thinned, (node[1], node[0]), (result[1], result[0]), (255,0,0), 1)
 cv2.imshow('derp.jpg', cv2.resize(color_thinned, None, fx=4, fy=4, interpolation=cv2.INTER_AREA))
+cv2.imwrite('graphed_bear.jpg', cv2.resize(color_thinned, None, fx=4, fy=4, interpolation=cv2.INTER_AREA))
 cv2.waitKey()
