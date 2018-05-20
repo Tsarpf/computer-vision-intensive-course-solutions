@@ -2,6 +2,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{hyperref}
 
 \begin{document}
 \title{Day 4}
@@ -9,6 +10,7 @@
 \author{\emph{Teemu Sarapisto}}
 \maketitle
 
+\def\code#1{\texttt{#1}}
 \newcommand{\aaa}[3]{%
   \fbox{\includegraphics[height=30mm]{#1}} \quad
   \fbox{\includegraphics[height=30mm]{#2}} \quad
@@ -230,8 +232,55 @@
           ret, frame = cap.read()
   \end{verbatim}
 
+  \subsection{How long it took}
+  Maybe 8 hours of not very intensive or focused working
 
-  \section{Day 4 Homework}
+ \section{Day 4 Homework}
+ \subsection{Face detect parameter experimentation}
+  \begin{figure}[h]
+      \centering
+      \includegraphics[scale=0.55]{face_detect}
+  \end{figure}
+ With the following code/parameters the program found 6 eyes (and a mouth it shouldn't have)
+ \begin{verbatim}
+    face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+    eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_eye.xml')
+    img = cv2.imread('people.jpeg')
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    faces = face_cascade.detectMultiScale(gray, 1.01, 250)
+    for (x,y,w,h) in faces:
+        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = img[y:y+h, x:x+w]
+        eyes = eye_cascade.detectMultiScale(roi_gray, 1.001, 45)
+        for (ex,ey,ew,eh) in eyes:
+            cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+    cv2.imshow('img',img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+ \end{verbatim}
+
+ \subsection{Parameter explanation}
+    From \url{https://stackoverflow.com/questions/20801015/recommended-values-for-opencv-detectmultiscale-parameters}: \code{minNeighbors} - Parameter specifying how many neighbors each candidate rectangle should have to retain it. This parameter will affect the quality of the detected faces. Higher value results in less detections but with higher quality. 
+  
+    \code{scaleFactor} - The face detector features are applied as differently sized "windows" in a cascading fashion to save time, \code{scaleFactor} sets how much we decrease the size of the window on each step. F.ex with $1.05$ the size is decreased by 5\%.
+
+\subsection{OpenCV CascadeClassifier source}
+is in \code{cascadedetect.cpp}, for example can be found from \url{https://github.com/opencv/opencv/blob/10ba6a93a6fee952fb7812b28989eb209d4f49a1/modules/objdetect/src/cascadedetect.cpp}
+
+\subsection{Other classifier files}
+    \code{haarcascades\/haarcascade\_eye\_tree\_eyeglasses.xml} was good at finding more eyes from the image
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.45]{eyeglasses_detect}
+    \end{figure}
+
+
+\subsection{How long it took}
+1-2 hours
+
 
 \end{document}
 %  LocalWords:  Jorma Laaksonen pdf py tex OpenCV libopencv dev jpg
