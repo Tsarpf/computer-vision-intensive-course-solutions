@@ -87,6 +87,8 @@ def contains(list, tuple):
 
 def follow_line(endpoints, mask, cur, points):
     ends = []
+    if cur[0] >= points.shape[0] or cur[1] >= points.shape[1] or cur[0] < 0 or cur[1] < 0:
+        return ends 
     if points[cur[0], cur[1]] == 0:
         return ends 
     if contains(endpoints, cur):
@@ -101,12 +103,19 @@ def follow_line(endpoints, mask, cur, points):
     return ends
 
 def graph_skeleton(skeleton):
-    graph = np.zeros((skeleton.shape[0], skeleton.shape[1], 3), np.uint8)
+    #graph = np.zeros((skeleton.shape[0], skeleton.shape[1], 3), np.uint8)
     color_skeleton = cv2.cvtColor(skeleton, cv2.COLOR_GRAY2RGB)
-    terminals, branches = find_terminals_and_branches(skeleton, color_skeleton)
+    testink = np.empty_like(color_skeleton)
+    #terminals, branches = find_terminals_and_branches(skeleton, color_skeleton)
+    terminals, branches = find_terminals_and_branches(skeleton, testink)
 
     search_img = np.copy(skeleton)
-    nodes = np.concatenate((terminals, branches))
+    if len(terminals) < 1:
+        nodes = branches
+    elif len(branches) < 1:
+        nodes = terminals
+    else:
+        nodes = np.concatenate((terminals, branches))
     for node in nodes:
         results = []
         #results.extend(follow_line(nodes, empty_mask, node, search_img))
@@ -117,26 +126,40 @@ def graph_skeleton(skeleton):
                     idy = y - 1
                     results.extend(follow_line(nodes, mask_dir((idy, idx)), (node[0] + idy, node[1] + idx), search_img))
         for result in results:
-            cv2.line(color_skeleton, (node[1], node[0]), (result[1], result[0]), (255,0,0), 1)
-    return color_skeleton
+            cv2.line(testink, (node[1], node[0]), (result[1], result[0]), (255,0,0), 1)
+    return testink
+    #return color_skeleton
 
-color_skeleton = graph_skeleton(thinned)
+#color_skeleton = graph_skeleton(thinned)
 
 
-cv2.imshow('derp.jpg', cv2.resize(color_skeleton, None, fx=4, fy=4, interpolation=cv2.INTER_AREA))
-cv2.imwrite('graphed_bear.jpg', cv2.resize(color_skeleton, None, fx=4, fy=4, interpolation=cv2.INTER_AREA))
+#cv2.imshow('derp.jpg', cv2.resize(color_skeleton, None, fx=4, fy=4, interpolation=cv2.INTER_AREA))
+#cv2.imwrite('graphed_bear.jpg', cv2.resize(color_skeleton, None, fx=4, fy=4, interpolation=cv2.INTER_AREA))
+
 #
-#da_vinci = cv2.imread('da_vinci_vitruve_crop.jpg',0)
-## global thresholding
-##ret1,th1 = cv2.threshold(da_vinci,127,255,cv2.THRESH_BINARY)
-### Otsu's thresholding
-##ret2,th2 = cv2.threshold(da_vinci,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-### Otsu's thresholding after Gaussian filtering
+#da_vinci = cv2.imread('da_vinci_vitruve.jpg',0)
 #da_vinci_uint8 = np.array(da_vinci * 255, dtype=np.uint8)
-#blur = cv2.GaussianBlur(da_vinci_uint8,(3,3),0)
-#ret3,th3 = cv2.threshold(blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+#blur = cv2.GaussianBlur(da_vinci_uint8,(5,5),0)
 #da_vinci_thinned = cv2.ximgproc.thinning(blur, thinningType=1)
 #davinci_graph = graph_skeleton(da_vinci_thinned)
-#
-#cv2.imshow('adsfads', da_vinci_thinned)
+##cv2.imshow('adsfads', davinci_graph)
+#cv2.imwrite('vitruve.jpg', davinci_graph)
+
+
+#sacred = cv2.imread('woman_with_umbrella.png',0)
+#sacred_uint8 = np.array(sacred * 255, dtype=np.uint8)
+#sacred_blur = cv2.GaussianBlur(sacred_uint8,(5,5),0)
+#sacred_thinned = cv2.ximgproc.thinning(sacred_blur, thinningType=1)
+#sacred_graph = graph_skeleton(sacred_thinned)
+
+umbrella = cv2.imread('woman_with_umbrella.png',0)
+umbrella_uint8 = np.array(umbrella * 255, dtype=np.uint8)
+umbrella_blur = cv2.GaussianBlur(umbrella_uint8,(3,3),0)
+umbrella_thinned = cv2.ximgproc.thinning(umbrella_blur, thinningType=1)
+umbrella_graph = graph_skeleton(umbrella_thinned)
+
+#cv2.imshow('adsfads', sacred_graph)
+#cv2.imwrite('umbrella.png', sacred_graph)
+cv2.imshow('adsfads', umbrella_graph)
+cv2.imwrite('umbrella.png', umbrella_graph)
 cv2.waitKey()
