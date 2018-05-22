@@ -14,9 +14,9 @@ print(cv2.__version__)
 #Create the object skeleton with OpenCV’s ximgproc.thinning() function from the original image and try if different values for the thinningType argument would make any difference
 
 bear = cv2.imread('bear.pbm', cv2.IMREAD_GRAYSCALE) / 255
+bear_uint8 = np.array(bear * 255, dtype=np.uint8)
 
 #cv2.imwrite("bear.jpg", bear * 255)
-bear_uint8 = np.array(bear * 255, dtype=np.uint8)
 #bear= cv2.cvtColor(original_uint8,cv2.COLOR_GRAY2BGR)
 
 #print(bear)
